@@ -68,7 +68,11 @@ class ConvertController extends Controller
 
                 if ($imageFile) {
                     info('image pathname:', [$imageFile->getPathname()]);
-                    $tp->setImageValue('image', ['path' => $imageFile->getPathname(), 'width' => 600, 'height' => 400]);
+                    $tp->setImageValue('image', [
+                        'path' => $imageFile->getPathname(),
+                        'width' => $request->get('image_width', 600),
+                        'height' => $request->get('image_height', 400),
+                    ]);
                 }
 
                 // special json key "rows"
@@ -103,14 +107,14 @@ class ConvertController extends Controller
 
         if ($shouldWait) {
             $filename = str_replace('.docx', '.pdf', $filename);
-            retry(10, function () use ($filename) {
+            retry(100, function () use ($filename) {
                 if (Storage::exists($filename)) {
                     return Storage::download($filename);
                 } else {
                     Log::error("File $filename not found");
                     throw new FileNotFoundException;
                 }
-            }, 1000);
+            }, 300);
         }
 
         return Storage::download($filename);
