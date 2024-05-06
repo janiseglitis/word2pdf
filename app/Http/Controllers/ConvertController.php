@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ProcessDocument;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use PhpOffice\PhpWord\Exception\CopyFileException;
 use PhpOffice\PhpWord\Exception\CreateTemporaryFileException;
@@ -20,11 +23,10 @@ class ConvertController extends Controller
     /**
      * @throws CopyFileException
      * @throws CreateTemporaryFileException
+     * @throws \Throwable
      */
     public function run(Request $request): JsonResponse|StreamedResponse
     {
-        $filename = 'result.docx';
-
         $rules = [
             // application/vnd.openxmlformats-officedocument.wordprocessingml.document
             'template' => 'required|file|extensions:docx',
@@ -88,14 +90,27 @@ class ConvertController extends Controller
             }
         }
 
+        $filename = Str::random(32) . '.docx';
         $path = storage_path('app/' . $filename);
         $tp->saveAs($path);
 
+        $shouldWait = false;
+
         if (request('return') == 'pdf' || $request->has('convert-to-pdf')) {
-            $command = "lowriter --convert-to pdf $path --outdir " . storage_path('app');
-            exec($command, $output, $result);
-            info($command, [$output, $result]);
+            ProcessDocument::dispatch($filename);
+            $shouldWait = true;
+        }
+
+        if ($shouldWait) {
             $filename = str_replace('.docx', '.pdf', $filename);
+            retry(10, function () use ($filename) {
+                if (Storage::exists($filename)) {
+                    return Storage::download($filename);
+                } else {
+                    Log::error("File $filename not found");
+                    throw new FileNotFoundException;
+                }
+            }, 1000);
         }
 
         return Storage::download($filename);
