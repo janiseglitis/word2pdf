@@ -35,17 +35,21 @@
                 <span class="font-mono text-blue-800">
                     @{{name}} @{{surname}} @{{date}}
                 </span>
+                etc.
             </div>
             <div>
                 2. Upload this document.
             </div>
             <div>
                 3. Prepare json structure and paste it in the textarea field below.
-                If you need table rows you must use "table_rows" array.
+                If you need table rows you must use <i>"table_rows"</i> array.
                 An example is given below.
             </div>
             <div>
-                4. Press the generate button. Enjoy!
+                4. If you want to include an image you should use <span class="font-mono text-blue-800">@{{image}}</span> tag.
+            </div>
+            <div>
+                5. Press the generate button. Enjoy!
             </div>
         </div>
 
@@ -89,13 +93,19 @@
 
             <button class="btn btn-success w-full">
                 <i class="fa-solid fa-file-word"></i>
-                Generate to docx!
+                Generate DOCX!
             </button>
 
             <button class="btn btn-secondary w-full" name="convert-to-pdf">
                 <i class="fa-solid fa-file-pdf"></i>
-                Generate to pdf!
+                Generate PDF!
             </button>
+
+            <div class="text-center text-gray-500">
+                <i>
+                    PDF generation takes a little bit longer.
+                </i>
+            </div>
 
         </form>
     </div>
