@@ -14,7 +14,9 @@
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.10.2/dist/full.min.css" rel="stylesheet" type="text/css"/>
     <script src="https://cdn.tailwindcss.com"></script>
 
-    @vite('')
+    @if (app()->isLocal())
+        @vite('')
+    @endif
 
 </head>
 <body class="h-screen">
