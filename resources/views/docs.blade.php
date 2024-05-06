@@ -1,5 +1,9 @@
 <x-layout>
 
+    @php
+        $url = config('app.url');
+    @endphp
+
     <h1 class="text-3xl mb-4">
         <a href="/" class="link">
             {{ config('app.name') }}
@@ -17,7 +21,7 @@
                 <pre>
                     <code>
     curl --request POST
-    --url {{ url()->current() }}/api/convert \
+    --url {{ $url }}/api/convert \
     --header 'Content-Type: multipart/form-data' \
     --form name=John \
     --form 'template=@path/to/template.docx' \
@@ -37,7 +41,7 @@
     --header 'Content-Type: multipart/form-data; boundary=---011000010111000001101001' \
     --body-data '-----011000010111000001101001\r\nContent-Disposition: form-data; name="name"\r\n\r\nJohn\r\n-----011000010111000001101001\r\nContent-Disposition: form-data; name="template"\r\n\r\n\r\n-----011000010111000001101001\r\nContent-Disposition: form-data; name="table_rows"\r\n\r\n[{"no": 2, "date": "01.01.2005"},{"no": 2, "date": "01.01.2010"},{"no": 2, "date": "01.01.2008"},{"no": 2, "date": "01.01.2010"}]\r\n-----011000010111000001101001\r\nContent-Disposition: form-data; name="return"\r\n\r\npdf\r\n-----011000010111000001101001--\r\n\r\n' \
     --output-document \
-    - {{ url()->current() }}/api/convert</code>
+    - {{ $url }}/api/convert</code>
                 </pre>
             </div>
         </div>
@@ -56,7 +60,7 @@
     const settings = {
         "async": true,
         "crossDomain": true,
-        "url": "{{ url()->current() }}/api/convert",
+        "url": "{{ $url }}/api/convert",
         "method": "POST",
         "headers": {},
         "processData": false,
@@ -82,7 +86,7 @@
     MediaType mediaType = MediaType.parse("multipart/form-data; boundary=---011000010111000001101001");
     RequestBody body = RequestBody.create(mediaType, "-----011000010111000001101001\r\nContent-Disposition: form-data; name=\"name\"\r\n\r\nJohn\r\n-----011000010111000001101001\r\nContent-Disposition: form-data; name=\"template\"\r\n\r\n\r\n-----011000010111000001101001\r\nContent-Disposition: form-data; name=\"table_rows\"\r\n\r\n[{\"no\": 2, \"date\": \"01.01.2005\"},{\"no\": 2, \"date\": \"01.01.2010\"},{\"no\": 2, \"date\": \"01.01.2008\"},{\"no\": 2, \"date\": \"01.01.2010\"}]\r\n-----011000010111000001101001\r\nContent-Disposition: form-data; name=\"return\"\r\n\r\npdf\r\n-----011000010111000001101001--\r\n\r\n");
     Request request = new Request.Builder()
-      .url("http://127.0.0.1:8000/api/convert")
+      .url("{{ $url }}/api/convert")
       .post(body)
       .addHeader("Content-Type", "multipart/form-data; boundary=---011000010111000001101001")
       .build();
