@@ -57,7 +57,7 @@
             @csrf
             <label class="form-control w-full">
                 <div class="label">
-                    <span class="label-text">Choose DOCX template</span>
+                    <span class="label-text">Choose a template</span>
                 </div>
                 <input type="file" name="template" class="file-input file-input-bordered" accept=".docx"/>
                 @error('template')
@@ -66,7 +66,7 @@
             </label>
             <label class="form-control w-full">
                 <div class="label">
-                    <span class="label-text">Choose image (optional)</span>
+                    <span class="label-text">Choose an image (optional)</span>
                 </div>
                 <input type="file" name="image" class="file-input file-input-bordered" accept="image/*"/>
                 @error('image')
