@@ -61,9 +61,17 @@ class ConvertController extends Controller
         if ($request->has('values')) {
             info(request('values'));
             if ($substitutesArray = json_decode(trim(request('values')), true)) {
-                info($substitutesArray);
                 $tableRows = $substitutesArray[self::TABLE_ROWS] ?? null;
                 unset($substitutesArray[self::TABLE_ROWS]);
+                info('substitutesArray', $substitutesArray);
+
+                // taking care of nested arrays
+                foreach ($substitutesArray as $key => $item) {
+                    if (is_array($item)) {
+                        $substitutesArray[$key] = collect($item)->flatten()->implode(',');
+                    }
+                }
+
                 $tp->setValues($substitutesArray);
 
                 if ($imageFile) {
@@ -73,6 +81,8 @@ class ConvertController extends Controller
                         'width' => $request->get('image_width', 600),
                         'height' => $request->get('image_height', 400),
                     ]);
+                } else {
+                    info('NO image found');
                 }
 
                 // special json key "rows"
@@ -87,6 +97,8 @@ class ConvertController extends Controller
                             Log::error($exception->getMessage());
                         }
                     }
+                } else {
+                    info('NO tableRows found');
                 }
             } else {
                 Log::error('Wrong json!');
@@ -97,6 +109,7 @@ class ConvertController extends Controller
         $filename = Str::random(32) . '.docx';
         $path = storage_path('app/' . $filename);
         $tp->saveAs($path);
+        info('Save as:', [$path]);
 
         $shouldWait = false;
 
