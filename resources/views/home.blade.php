@@ -30,10 +30,13 @@
             An example is given below.
         </div>
         <div>
-            4. <i>Optional.</i> If you have an image replacement in your document you should use <span class="font-mono text-blue-800">@{{image}}</span> tag.
+            5. Choose your opening and closing template placeholders. Default: @{{  }}. They can be empty as well.
         </div>
         <div>
-            5. Press the generate button. Enjoy!
+            6. <i>Optional.</i> If you have an image replacement in your document you should use <span class="font-mono text-blue-800">@{{image}}</span> tag.
+        </div>
+        <div>
+            7. Press the generate button. Enjoy!
         </div>
     </div>
 
@@ -48,6 +51,16 @@
             <span class="text-red-500">{{ $message }}</span>
             @enderror
         </label>
+
+        <label class="input input-bordered flex items-center gap-2">
+            Placeholder start
+            <input type="text" name="placeholder_start" class="grow" value="@{{"/>
+        </label>
+        <label class="input input-bordered flex items-center gap-2">
+            Placeholder end
+            <input type="text" name="placeholder_end" class="grow" value="}}"/>
+        </label>
+
         <label class="form-control w-full">
             <div class="label">
                 <span class="label-text">Choose an image (optional)</span>

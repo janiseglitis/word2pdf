@@ -26,6 +26,8 @@
     --form name=John \
     --form 'template=@path/to/template.docx' \
     --form 'table_rows=[{"no": 2, "date": "01.01.2005"},{"no": 2, "date": "01.01.2010"},{"no": 2, "date": "01.01.2008"},{"no": 2, "date": "01.01.2010"}]' \
+    --form placeholder_start=@{{ \
+    --form placeholder_end=}} \
     --form return=pdf</code>
                 </pre>
             </div>
@@ -39,7 +41,7 @@
     wget --quiet \
     --method POST \
     --header 'Content-Type: multipart/form-data; boundary=---011000010111000001101001' \
-    --body-data '-----011000010111000001101001\r\nContent-Disposition: form-data; name="name"\r\n\r\nJohn\r\n-----011000010111000001101001\r\nContent-Disposition: form-data; name="template"\r\n\r\n\r\n-----011000010111000001101001\r\nContent-Disposition: form-data; name="table_rows"\r\n\r\n[{"no": 2, "date": "01.01.2005"},{"no": 2, "date": "01.01.2010"},{"no": 2, "date": "01.01.2008"},{"no": 2, "date": "01.01.2010"}]\r\n-----011000010111000001101001\r\nContent-Disposition: form-data; name="return"\r\n\r\npdf\r\n-----011000010111000001101001--\r\n\r\n' \
+    --body-data '-----011000010111000001101001\r\nContent-Disposition: form-data; name="name"\r\n\r\nJohn\r\n-----011000010111000001101001\r\nContent-Disposition: form-data; name="template"\r\n\r\n\r\n-----011000010111000001101001\r\nContent-Disposition: form-data; name="table_rows"\r\n\r\n[{"no": 2, "date": "01.01.2005"},{"no": 2, "date": "01.01.2010"},{"no": 2, "date": "01.01.2008"},{"no": 2, "date": "01.01.2010"}]\r\n-----011000010111000001101001\r\nContent-Disposition: form-data; name="return"\r\n\r\ndocx\r\n-----011000010111000001101001\r\nContent-Disposition: form-data; name="placeholder_start"\r\n\r\n__\r\n-----011000010111000001101001\r\nContent-Disposition: form-data; name="placeholder_end"\r\n\r\n__\r\n-----011000010111000001101001--\r\n\r\n' \
     --output-document \
     - {{ $url }}/api/convert</code>
                 </pre>
@@ -55,6 +57,8 @@
     form.append("name", "John");
     form.append("template", "path/to/template.docx");
     form.append("table_rows", "[{\"no\": 2, \"date\": \"01.01.2005\"},{\"no\": 2, \"date\": \"01.01.2010\"},{\"no\": 2, \"date\": \"01.01.2008\"},{\"no\": 2, \"date\": \"01.01.2010\"}]");
+    form.append("placeholder_start", "@{{");
+    form.append("placeholder_end", "}}");
     form.append("return", "pdf");
 
     const settings = {
@@ -84,7 +88,7 @@
     OkHttpClient client = new OkHttpClient();
 
     MediaType mediaType = MediaType.parse("multipart/form-data; boundary=---011000010111000001101001");
-    RequestBody body = RequestBody.create(mediaType, "-----011000010111000001101001\r\nContent-Disposition: form-data; name=\"name\"\r\n\r\nJohn\r\n-----011000010111000001101001\r\nContent-Disposition: form-data; name=\"template\"\r\n\r\n\r\n-----011000010111000001101001\r\nContent-Disposition: form-data; name=\"table_rows\"\r\n\r\n[{\"no\": 2, \"date\": \"01.01.2005\"},{\"no\": 2, \"date\": \"01.01.2010\"},{\"no\": 2, \"date\": \"01.01.2008\"},{\"no\": 2, \"date\": \"01.01.2010\"}]\r\n-----011000010111000001101001\r\nContent-Disposition: form-data; name=\"return\"\r\n\r\npdf\r\n-----011000010111000001101001--\r\n\r\n");
+    RequestBody body = RequestBody.create(mediaType, "-----011000010111000001101001\r\nContent-Disposition: form-data; name=\"name\"\r\n\r\nJohn\r\n-----011000010111000001101001\r\nContent-Disposition: form-data; name=\"template\"\r\n\r\n\r\n-----011000010111000001101001\r\nContent-Disposition: form-data; name=\"table_rows\"\r\n\r\n[{\"no\": 2, \"date\": \"01.01.2005\"},{\"no\": 2, \"date\": \"01.01.2010\"},{\"no\": 2, \"date\": \"01.01.2008\"},{\"no\": 2, \"date\": \"01.01.2010\"}]\r\n-----011000010111000001101001\r\nContent-Disposition: form-data; name=\"return\"\r\n\r\ndocx\r\n-----011000010111000001101001\r\nContent-Disposition: form-data; name=\"placeholder_start\"\r\n\r\n__\r\n-----011000010111000001101001\r\nContent-Disposition: form-data; name=\"placeholder_end\"\r\n\r\n__\r\n-----011000010111000001101001--\r\n\r\n");
     Request request = new Request.Builder()
       .url("{{ $url }}/api/convert")
       .post(body)

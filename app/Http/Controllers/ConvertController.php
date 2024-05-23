@@ -46,8 +46,8 @@ class ConvertController extends Controller
 
         $file = $request->file('template')->move(storage_path('app/temp'));
         $tp = new TemplateProcessor($file->getPathname());
-        $tp->setMacroOpeningChars('{{');
-        $tp->setMacroClosingChars('}}');
+        $tp->setMacroOpeningChars((string)$request->get('placeholder_start', ''));
+        $tp->setMacroClosingChars((string)$request->get('placeholder_end', ''));
 
         $imageFile = null;
         if ($request->hasFile('image')) {
